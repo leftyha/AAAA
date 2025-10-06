@@ -1,0 +1,78 @@
+# 🦀 CrabHunter Configuración Base
+
+target:
+  # URLs semilla para iniciar el crawl
+  base_urls:
+    - "https://example.com"
+    - "https://app.example.com"
+
+  # Dominios permitidos (lista blanca)
+  allowed_domains:
+    - "example.com"
+    - "app.example.com"
+    - "static.example.com"
+
+  # Paths prohibidos (soporta wildcards)
+  disallowed_paths:
+    - "/logout"
+    - "/checkout"
+    - "/admin/*"
+
+crawl:
+  depth_max: 5            # Máxima profundidad de recursión
+  concurrency: 4          # Peticiones concurrentes
+  rate_limit_rps: 2       # Límite de requests por segundo
+  budgets:                # Límites para evitar descargas excesivas
+    pages_max: 2000
+    js_max: 1000
+    api_max: 1000
+  timeout_ms: 15000       # Timeout por request en milisegundos
+  follow_redirects: true
+
+  normalize_query:        # Limpieza de parámetros en URLs
+    drop_params: ["utm_*", "gclid", "fbclid", "session"]
+    sort_params: true
+
+content:
+  include_types:          # Tipos de contenido a capturar
+    - "text/html"
+    - "application/javascript"
+    - "text/javascript"
+    - "application/json"
+  exclude_extensions:     # Extensiones a ignorar
+    - ".png"
+    - ".jpg"
+    - ".jpeg"
+    - ".gif"
+    - ".webp"
+    - ".css"
+    - ".svg"
+    - ".mp4"
+    - ".pdf"
+    - ".woff"
+    - ".woff2"
+
+auth:
+  mode: "none"            # Opciones: none | cookies | header
+  cookies_file: "cookies.json"
+  headers: {}             # Ejemplo: {"Authorization": "Bearer <token>"}
+
+heuristics:
+  url_pattern_generalization: true
+  family_threshold: 0.8
+  family_max_samples: 3
+  simhash_shingle_size: 8
+  html_similarity_drop: 0.92
+  js_ast_extract_endpoints: true
+  parse_sourcemaps: true
+
+output:
+  root_dir: "output"
+  store_js_under: "js"
+  store_api_under: "api"
+  store_pages_under: "pages"
+
+git:
+  enable: true
+  repo: "git@your.git/privado/crabhunter-example.git"
+  branch: "main"
